@@ -3,6 +3,7 @@ import javax.swing.*;
 public class EmergencyGUI extends javax.swing.JFrame {
     LinkedPriorityQueue lpq;
     int c;
+    Patient p;
     
     public EmergencyGUI() {
         initComponents();
@@ -38,20 +39,23 @@ public class EmergencyGUI extends javax.swing.JFrame {
             }
         });
 
-        rbtnfair.setBackground(new java.awt.Color(0, 0, 0));
         buttonGroup1.add(rbtnfair);
         rbtnfair.setForeground(new java.awt.Color(51, 204, 0));
         rbtnfair.setText("Fair Condition");
+        rbtnfair.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        rbtnfair.setBorderPainted(true);
 
-        rbtnserious.setBackground(new java.awt.Color(0, 0, 0));
         buttonGroup1.add(rbtnserious);
         rbtnserious.setForeground(new java.awt.Color(255, 220, 113));
         rbtnserious.setText("Serious Condition");
+        rbtnserious.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        rbtnserious.setBorderPainted(true);
 
-        rbtncritical.setBackground(new java.awt.Color(0, 0, 0));
         buttonGroup1.add(rbtncritical);
         rbtncritical.setForeground(new java.awt.Color(255, 51, 51));
         rbtncritical.setText("Critical Condition");
+        rbtncritical.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        rbtncritical.setBorderPainted(true);
 
         jLabel2.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 14)); // NOI18N
         jLabel2.setText("Enter Patient Condition");
@@ -142,9 +146,12 @@ public class EmergencyGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtnameActionPerformed
 
     private void btnscheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnscheduleActionPerformed
+        String nm="";
+        nm = txtname.getName();
         if(rbtnfair.isSelected())c=2;
         if(rbtnserious.isSelected())c=1;
         if(rbtncritical.isSelected())c=0;
+        p = new Patient(nm, c);
         
         if(txtname.getText().equals("")){
             JOptionPane.showMessageDialog(this,"Please enter a valid name");
