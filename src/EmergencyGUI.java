@@ -174,19 +174,11 @@ public class EmergencyGUI extends javax.swing.JFrame {
     private void btnscheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnscheduleActionPerformed
         String nm="";
         c = 00100100;
-        //try{
         nm = txtname.getText();
         if(rbtnfair.isSelected()){c=2;}
         else if(rbtnserious.isSelected()){c=1;}
         else if(rbtncritical.isSelected()){c=0;}  
         p = new Patient(nm, c);
-        //try catch not neccesary
-        /*}catch(Exception e)
-        { //checks if form is completed and responds accordingly
-                JOptionPane.showMessageDialog(this,"Must fill form out completely.");
-                return;
-        }//end catch consequences */
-        //makes sure name and condition are set
         if (p.setName(nm)==false&& p.setCondition(c)==false){
             JOptionPane.showMessageDialog(this,"Must complete the form.");
             return;
@@ -241,11 +233,17 @@ public class EmergencyGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuexitActionPerformed
 
     private void mnuclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuclearActionPerformed
-        
+        //this clears the gui
         buttonGroup1.clearSelection();
         txtorder.setText("");
         txtname.setText("");
-        //need code to get rid of any patient info
+        //this clears any patients currently in lpq by moving through and "treating" them
+        //but doesnt print that they have been treated
+        //uses the same while loop as treatall
+        while(lpq.peekFront()!= "")
+            {
+                lpq.dequeue();
+            }
     }//GEN-LAST:event_mnuclearActionPerformed
 
     /**

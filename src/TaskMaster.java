@@ -367,11 +367,15 @@ public class TaskMaster extends javax.swing.JFrame {
     }//GEN-LAST:event_mnubeforectaskActionPerformed
 
     private void btnfirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnfirstActionPerformed
-       //change code because this is still the same as btnlast
-        if(curtask == tottask) return;
-        while(li.hasNext())li.next();
-        t=(Task)li.previous();
-        curtask = tottask;
+        if(curtask == 1) return;
+        curtask = 1;
+        while(true){
+            if(li.hasPrevious())
+                li.previous();
+            else break;
+        }
+        t=(Task)li.next();
+        li.previous();
         lblctask.setText(""+curtask);
         txtname.setText(t.getName());
         txtdesc.setText(t.getDescription());
