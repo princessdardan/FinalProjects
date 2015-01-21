@@ -8,7 +8,7 @@ public class LinkedPriorityQueue implements PriorityQueue {
         size = s;
         list = new ArrayList[size]; //establish how many lists
         for (int x = 0; x < size; x++){
-            list[x]=new ArrayList(); //instantiate each list
+            list[x] = new ArrayList(); //instantiate each list
         }
     }
     public Object dequeue(){
@@ -16,33 +16,37 @@ public class LinkedPriorityQueue implements PriorityQueue {
         //the first non-empty list instead of just get
         if (list[0].isEmpty()){
             if (list[1].isEmpty()){
-                if (list[2].isEmpty()) throw new IllegalStateException("Currently no patients in waiting room");
-                return list[2].remove(2);
+                if (list[2].isEmpty()){ 
+                    return "";
+                } 
+                else return list[2].remove(0);
             }
-            return list[1].remove(1);
+            else return list[1].remove(0);
         }		
-	return list[0].remove(0);	
+        else return list[0].remove(0);	
     }
     
     public Object peekFront(){ 
         if (list[0].isEmpty()){
             if (list[1].isEmpty()){
-                if (list[2].isEmpty()) throw new IllegalStateException("Currently no patients to treat");
-                return list[2].get(2);
+                if (list[2].isEmpty()){
+                    return "";         
+                }
+                else return list[2].get(0);
             }
-            return list[1].get(0);
+            else return list[1].get(0);
         }		
-	return list[0].get(0);
+        else return list[0].get(0);
         
     }
-    
-    public void enqueue(Object o){
+   
+    public void enqueue(Object o, int pcondition){
+        //given priority pcondition, add to the correct list
+        list[pcondition].add(o);
+    }
+     public void enqueue(Object o){
         //required to satisfy implementation of parent interface Queue
         throw new IllegalStateException("Must give a priority");
-    }
-    public void enqueue(Object o, int i){
-        //given priority "i", add to the correct list
-        list[i].add(o);
     }
     public int size(){
         //refers to the number of priorities 

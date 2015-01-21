@@ -123,6 +123,11 @@ public class TaskMaster extends javax.swing.JFrame {
         });
 
         btnlast.setText(">|");
+        btnlast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnlastActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -289,10 +294,10 @@ public class TaskMaster extends javax.swing.JFrame {
     }//GEN-LAST:event_mnushowalltasksActionPerformed
 
     private void mnuafterctaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuafterctaskActionPerformed
-        String nm = txtname.getText();//read in from screen
+        String nm = txtname.getText();
         String d = txtdesc.getText();
         t = new Task(nm, d);
-        if(t.validate()==false){//make sure data is ok
+        if(t.validate()==false){
             JOptionPane.showMessageDialog(this, "Error - Must enter all information");
             return;
         }
@@ -300,22 +305,20 @@ public class TaskMaster extends javax.swing.JFrame {
         
         li.add(t);//it always adds to the left of iterator
         li.previous();//always puts iterator B4 current task
-        curtask++;//new task is now current and we instered after, so advance current
-        tottask++;//we have one new task
-        lblttasks.setText(""+tottask);//update counter displays
+        curtask++;//new task is now current and we inserted after, so advance current position
+        tottask++;//add the new task to total tasks
+        lblttasks.setText(""+tottask);//update task count
         lblctask.setText(""+curtask);
         JOptionPane.showMessageDialog(this, "Task Added");
         
     }//GEN-LAST:event_mnuafterctaskActionPerformed
 
     private void btnpreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnpreviousActionPerformed
-        if(curtask==tottask)return;
-        while(li.hasNext())//go to the end
-            li.next();
-        t=(Task)li.previous();//get in front of last week
-        curtask=tottask;//current task is last task
-        //update display
+        if(curtask==1)return; //if curtask = 1 there are no tasks in front of it
+        curtask--;
         lblctask.setText(""+curtask);
+        t=(Task)li.previous(); // looks 
+        //displays the task
         txtname.setText(t.getName());
         txtdesc.setText(t.getDescription());
     }//GEN-LAST:event_btnpreviousActionPerformed
@@ -327,6 +330,7 @@ public class TaskMaster extends javax.swing.JFrame {
         li.next();//passes over current task
         li.next();//passes over next task
         t=(Task)li.previous();//get in front of task
+        //displays the task
         txtname.setText(t.getName());
         txtdesc.setText(t.getDescription());
     }//GEN-LAST:event_btnnextActionPerformed
@@ -353,18 +357,24 @@ public class TaskMaster extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error - Must enter all information");
             return;
         }
-     
         li.add(t);//it always adds to the left of iterator
         li.previous();//always puts iterator B4 current task
-        if(curtask==0)curtask++;//new task is now current and we instered after, so advance current
-        tottask++;//we have one new task
-        lblttasks.setText(""+tottask);//update counter displays
+        if(curtask==0)curtask++;//new task is now current and we instered before, so change current position
+        tottask++;//add the new task to total tasks
+        lblttasks.setText(""+tottask);
         lblctask.setText(""+curtask);
         JOptionPane.showMessageDialog(this, "Task Added");
     }//GEN-LAST:event_mnubeforectaskActionPerformed
 
     private void btnfirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnfirstActionPerformed
-         
+       //change code because this is still the same as btnlast
+        if(curtask == tottask) return;
+        while(li.hasNext())li.next();
+        t=(Task)li.previous();
+        curtask = tottask;
+        lblctask.setText(""+curtask);
+        txtname.setText(t.getName());
+        txtdesc.setText(t.getDescription());
     }//GEN-LAST:event_btnfirstActionPerformed
 
     private void mnureplacectaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnureplacectaskActionPerformed
@@ -412,6 +422,16 @@ public class TaskMaster extends javax.swing.JFrame {
         txtname.setText(t.getName());
         txtdesc.setText(t.getDescription());
     }//GEN-LAST:event_mnuremovectaskActionPerformed
+
+    private void btnlastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlastActionPerformed
+        if(curtask == tottask) return;
+        while(li.hasNext())li.next();
+        t=(Task)li.previous();
+        curtask = tottask;
+        lblctask.setText(""+curtask);
+        txtname.setText(t.getName());
+        txtdesc.setText(t.getDescription());
+    }//GEN-LAST:event_btnlastActionPerformed
  
     /**
      * @param args the command line arguments

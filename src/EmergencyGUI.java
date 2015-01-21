@@ -7,7 +7,7 @@ public class EmergencyGUI extends javax.swing.JFrame {
     
     public EmergencyGUI() {
         initComponents();
-        LinkedPriorityQueue lpq = new LinkedPriorityQueue(3);
+        lpq = new LinkedPriorityQueue(3);
         
     }
 
@@ -27,6 +27,10 @@ public class EmergencyGUI extends javax.swing.JFrame {
         btntreatall = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtorder = new javax.swing.JTextArea();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        Program = new javax.swing.JMenu();
+        mnuclear = new javax.swing.JMenuItem();
+        mnuexit = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,6 +89,28 @@ public class EmergencyGUI extends javax.swing.JFrame {
         txtorder.setRows(5);
         jScrollPane1.setViewportView(txtorder);
 
+        Program.setText("Program");
+
+        mnuclear.setText("Clear");
+        mnuclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuclearActionPerformed(evt);
+            }
+        });
+        Program.add(mnuclear);
+
+        mnuexit.setText("Exit");
+        mnuexit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuexitActionPerformed(evt);
+            }
+        });
+        Program.add(mnuexit);
+
+        jMenuBar1.add(Program);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,20 +133,20 @@ public class EmergencyGUI extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14))))
+                        .addGap(91, 91, 91))))
             .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -135,7 +161,7 @@ public class EmergencyGUI extends javax.swing.JFrame {
                     .addComponent(rbtncritical)
                     .addComponent(btntreatall, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
         );
 
         pack();
@@ -147,29 +173,80 @@ public class EmergencyGUI extends javax.swing.JFrame {
 
     private void btnscheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnscheduleActionPerformed
         String nm="";
-        nm = txtname.getName();
-        if(rbtnfair.isSelected())c=2;
-        if(rbtnserious.isSelected())c=1;
-        if(rbtncritical.isSelected())c=0;
+        c = 00100100;
+        //try{
+        nm = txtname.getText();
+        if(rbtnfair.isSelected()){c=2;}
+        else if(rbtnserious.isSelected()){c=1;}
+        else if(rbtncritical.isSelected()){c=0;}  
         p = new Patient(nm, c);
-        
-        if(txtname.getText().equals("")){
-            JOptionPane.showMessageDialog(this,"Please enter a valid name");
+        //try catch not neccesary
+        /*}catch(Exception e)
+        { //checks if form is completed and responds accordingly
+                JOptionPane.showMessageDialog(this,"Must fill form out completely.");
+                return;
+        }//end catch consequences */
+        //makes sure name and condition are set
+        if (p.setName(nm)==false&& p.setCondition(c)==false){
+            JOptionPane.showMessageDialog(this,"Must complete the form.");
             return;
         }
-        
-        Patient p = new Patient(txtname.getText(), c);
+        else if (p.setName(nm)==false){
+            JOptionPane.showMessageDialog(this,"Must enter a name for the patient.");
+            return;  
+        }
+        else if (p.setCondition(c)==false){
+            JOptionPane.showMessageDialog(this,"Must set the patient's condition.");
+            return;
+        }//end else if
+        else{
+        //sends patient info to queue matching their priority
         lpq.enqueue(p,c);
-        txtorder.append(p.toString());
+        //adds patient info to the list of patients
+        txtorder.append(p.toString()+"\tStatus: Waiting\n");
+        //sets txtname and radio buttons as null
+        buttonGroup1.clearSelection();
+        txtname.setText("");
+        }
     }//GEN-LAST:event_btnscheduleActionPerformed
 
     private void btntreatnextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntreatnextActionPerformed
-        // TODO add your handling code here:
+        //checks if list is empty
+        if(lpq.peekFront()==""){ 
+            JOptionPane.showMessageDialog(this,"There are currently no patients in the waiting room.");
+            return;  
+        }
+        else
+            // treats the next patient according priority
+        txtorder.append(lpq.dequeue()+"\tStatus: Treated\n");
     }//GEN-LAST:event_btntreatnextActionPerformed
 
     private void btntreatallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntreatallActionPerformed
-        // TODO add your handling code here:
+        //checks if list is empty
+        if(lpq.peekFront()==""){ 
+            JOptionPane.showMessageDialog(this,"There are currently no patients in the waiting room.");
+            return;  
+        }
+        else
+            //treats all patients in order of priority and stops when the list is empty
+            while(lpq.peekFront()!= "")
+            {
+                txtorder.append(lpq.dequeue()+"\tStatus: Treated\n");
+            }
+            
     }//GEN-LAST:event_btntreatallActionPerformed
+
+    private void mnuexitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuexitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_mnuexitActionPerformed
+
+    private void mnuclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuclearActionPerformed
+        
+        buttonGroup1.clearSelection();
+        txtorder.setText("");
+        txtname.setText("");
+        //need code to get rid of any patient info
+    }//GEN-LAST:event_mnuclearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,13 +284,17 @@ public class EmergencyGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu Program;
     private javax.swing.JButton btnschedule;
     private javax.swing.JButton btntreatall;
     private javax.swing.JButton btntreatnext;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem mnuclear;
+    private javax.swing.JMenuItem mnuexit;
     private javax.swing.JRadioButton rbtncritical;
     private javax.swing.JRadioButton rbtnfair;
     private javax.swing.JRadioButton rbtnserious;
